@@ -1,5 +1,5 @@
 import React, { Suspense, useRef } from "react";
-import { Environment, CameraControls, Sky, ContactShadows } from "@react-three/drei";
+import { Environment, CameraControls, Sky, ContactShadows, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import PropertyModel from "./PropertyModel";
 import InteriorView from "./InteriorView"; // Import new component

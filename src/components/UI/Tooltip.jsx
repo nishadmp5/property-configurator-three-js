@@ -3,7 +3,9 @@ import { propertyDetails } from "../../data/properties";
 import { useStore } from "../../strore/useStore";
 
 const Tooltip = () => {
-  const { hoveredProperty, cursorPos } = useStore();
+  const { hoveredProperty, cursorPos,viewMode } = useStore();
+
+  if(viewMode !== 'exterior') return null;
 
   // If nothing is hovered, don't render anything
   if (!hoveredProperty) return null;
