@@ -5,15 +5,17 @@ export const useStore = create((set) => ({
   hoveredProperty: null,
   cursorPos: { x: 0, y: 0 },
   viewMode: 'exterior', 
-  
-  // New: Controls the black overlay
   isFading: false, 
+  
+  // New: Track which room inside the house is active
+  targetRoom: null, 
 
   setSelectedProperty: (id) => set({ selectedProperty: id }),
   setHoveredProperty: (id) => set({ hoveredProperty: id }),
   setCursorPos: (pos) => set({ cursorPos: pos }),
   setViewMode: (mode) => set({ viewMode: mode }),
-  
-  // New action
   setIsFading: (state) => set({ isFading: state }),
+  
+  // New Action
+  setTargetRoom: (roomId) => set({ targetRoom: roomId }),
 }));

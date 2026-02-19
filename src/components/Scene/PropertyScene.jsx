@@ -1,8 +1,8 @@
 import React, { Suspense, useRef } from "react";
-import { Environment, CameraControls, Sky, ContactShadows, OrbitControls } from "@react-three/drei";
+import { Environment, CameraControls, Sky } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import PropertyModel from "./PropertyModel";
-import InteriorView from "./InteriorView"; // Import new component
+import InteriorView from "./InteriorView";
 import CameraHandler from "./CameraHandler";
 import { useStore } from "../../strore/useStore";
 
@@ -16,10 +16,8 @@ const PropertyScene = () => {
         
         <CameraHandler controlsRef={controlsRef} />
 
-        {/* --- LIGHTING (Common) --- */}
         <ambientLight intensity={0.5} />
         
-        {/* --- EXTERIOR SCENE --- */}
         {(viewMode === 'exterior' || viewMode === 'zooming_in') && (
           <group>
              <Sky sunPosition={[100, 20, 100]} />
@@ -30,7 +28,6 @@ const PropertyScene = () => {
           </group>
         )}
 
-        {/* --- INTERIOR SCENE --- */}
         {viewMode === 'interior' && (
           <group>
             <Environment preset="apartment" />
@@ -43,9 +40,15 @@ const PropertyScene = () => {
         <CameraControls 
           ref={controlsRef}
           makeDefault
-          // Adjust controls based on mode
+          // 1. DISABLE ZOOM in Interior Mode
+          dollySpeed={viewMode === 'interior' ? 0 : 1} 
+          
+          // 2. Adjust Distances (Optional safety lock)
           minDistance={viewMode === 'interior' ? 0.1 : 4} 
-          maxDistance={viewMode === 'interior' ? 10 : 15}
+          maxDistance={viewMode === 'interior' ? 20 : 15}
+          
+          // 3. Smoothness settings
+          smoothTime={1.0}
         />
 
       </Canvas>
