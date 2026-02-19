@@ -3,7 +3,7 @@ import { useRef } from "react";
 import GroundMesh from "./GroundModel";
 import PropertyBlueprint from "./PropertyBlueprint";
 
-const PropertyModel = ({ ...props }) => {
+const PropertyModel = () => {
   const { scene } = useGLTF("/models/property.glb");
 
   const groupRef = useRef();
@@ -11,11 +11,10 @@ const PropertyModel = ({ ...props }) => {
   return (
     <group position={[0, 0, 0]} rotation={[0, 0, 0]}>
       <primitive
-      raycast={() => null} // <--- IGNORES MOUSE EVENTS ON THE 3D HOUSE
+        raycast={() => null}
         ref={groupRef}
         object={scene}
-        scale={0.00125} // Initial scale for reveal
-        {...props}
+        scale={0.00125}
         dispose={null}
       />
       <GroundMesh />

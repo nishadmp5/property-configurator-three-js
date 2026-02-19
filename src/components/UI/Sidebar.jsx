@@ -1,20 +1,21 @@
 import React from "react";
 import { propertyDetails } from "../../data/properties";
-import { useStore } from "../../strore/useStore";
+import { useStore } from "../../store/useStore";
+
+const propertyDetailsMap = new Map(propertyDetails.map((p) => [p.id, p]));
 
 const Sidebar = () => {
-  // 1. Get state and the setter function
   const { selectedProperty, setSelectedProperty, viewMode, setViewMode } =
     useStore();
 
-  // 2. Find the full data object based on ID
-  const activeUnit = propertyDetails.find((p) => p.id === selectedProperty);
+  const activeUnit = propertyDetailsMap.get(selectedProperty);
 
   const handleBack = () => {
     if (viewMode === 'interior') {
-      setViewMode('exterior'); // Go back to outside view
+      setViewMode('exterior');
+      setSelectedProperty(null);
     } else {
-      setSelectedProperty(null); // Deselect property
+      setSelectedProperty(null);
     }
   };
 
@@ -163,7 +164,7 @@ const Sidebar = () => {
             {/* Action Button */}
             <div className="mt-auto pt-6">
               <button
-              onClick={() => handleViewSwitching()}
+                onClick={handleViewSwitching}
                 disabled={!activeUnit.isAvailable}
                 className={`w-full py-3 rounded-lg font-bold transition-all shadow-md ${
                   activeUnit.isAvailable
@@ -171,7 +172,7 @@ const Sidebar = () => {
                     : "bg-gray-200 text-gray-400 cursor-not-allowed"
                 }`}
               >
-                {activeUnit.isAvailable ? viewMode === "interior" ? "Explore Property" :  "Explore Interior" : "Unavailable"}
+                {activeUnit.isAvailable ? (viewMode === "interior" ? "Return to Exterior" : "Explore Interior") : "Unavailable"}
               </button>
             </div>
           </div>

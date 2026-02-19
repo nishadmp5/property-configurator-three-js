@@ -4,7 +4,7 @@ import { Canvas } from "@react-three/fiber";
 import PropertyModel from "./PropertyModel";
 import InteriorView from "./InteriorView";
 import CameraHandler from "./CameraHandler";
-import { useStore } from "../../strore/useStore";
+import { useStore } from "../../store/useStore";
 
 const PropertyScene = () => {
   const controlsRef = useRef();

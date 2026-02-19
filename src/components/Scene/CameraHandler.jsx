@@ -1,8 +1,7 @@
 import { useEffect } from "react";
-import * as THREE from "three";
-import { useStore } from "../../strore/useStore";
-import { bluePrintData } from "./constants/propertyBluePrintContants";
-import { interiorBluePrintData } from "./constants/interiorConstants"; // Ensure this path matches your file structure
+import { useStore } from "../../store/useStore";
+import { bluePrintData } from "../../constants/propertyBlueprintConstants";
+import { interiorBluePrintData } from "../../constants/interiorConstants";
 
 const CameraHandler = ({ controlsRef }) => {
   const { 
@@ -19,56 +18,51 @@ const CameraHandler = ({ controlsRef }) => {
   // ---------------------------------------------------------
   useEffect(() => {
     if (!controlsRef.current) return;
+    let cancelled = false;
 
     const performTransition = async () => {
       // --- TRANSITION INTO INTERIOR ---
       if (viewMode === 'zooming_in' && selectedProperty) {
         const targetUnit = bluePrintData.find((u) => u.id === selectedProperty);
-        
+
         if (targetUnit) {
           const [x, y, z] = targetUnit.position;
 
-          // A. Zoom closer to the door/window (Fly animation)
           await controlsRef.current.setLookAt(
-            x, y, z + 1.5, // Stop just in front of unit
-            x, y, z,       // Look at center
-            true           // Animate (default ~1s based on smoothTime)
+            x, y, z + 1.5,
+            x, y, z,
+            true
           );
+          if (cancelled) return;
 
-          // B. Start Fading to Black
           setIsFading(true);
 
-          // C. Wait for the CSS fade-out to complete (e.g., 750ms)
           await new Promise((resolve) => setTimeout(resolve, 750));
+          if (cancelled) return;
 
-          // D. BEHIND THE CURTAIN: Switch the Scene
           setViewMode('interior');
-          
-          // Reset any previous room selection so we start fresh
-          setTargetRoom(null); 
+          setTargetRoom(null);
 
-          // E. BEHIND THE CURTAIN: Teleport Camera to Interior Start Position (Living Room / Hall)
-          // Note: The third argument 'false' means NO animation, instant cut
           await controlsRef.current.setLookAt(
-            0, 1.6, 4, // Default Interior spawn point (x,y,z)
-            0, 1.2, 0, // Look at center of room
-            false 
+            0, 1.6, 4,
+            0, 1.2, 0,
+            false
           );
+          if (cancelled) return;
 
-          // F. Reveal the new scene
           setIsFading(false);
         }
       }
 
       // --- TRANSITION BACK TO EXTERIOR (RESET) ---
       if (viewMode === 'exterior' && !selectedProperty) {
-         // Reset to default wide view of the building
          controlsRef.current.setLookAt(0, 5, 10, 0, 0, 0, true);
       }
     };
 
     performTransition();
 
+    return () => { cancelled = true; };
   }, [selectedProperty, viewMode, controlsRef, setViewMode, setIsFading, setTargetRoom]);
 
 

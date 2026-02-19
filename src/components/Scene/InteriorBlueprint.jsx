@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Edges, Html } from "@react-three/drei";
-import { useStore } from "../../strore/useStore";
-import { interiorBluePrintData } from "./constants/interiorConstants";
+import { useStore } from "../../store/useStore";
+import { interiorBluePrintData } from "../../constants/interiorConstants";
 
 const InteriorBluePrint = () => {
   const { setTargetRoom } = useStore();

@@ -1,11 +1,12 @@
-import React, { useState } from "react";
-import { Edges } from "@react-three/drei"; // <--- Import Edges
+import React from "react";
+import { Edges } from "@react-three/drei";
 import { propertyDetails } from "../../data/properties";
-import { bluePrintData } from "./constants/propertyBluePrintContants";
-import { useStore } from "../../strore/useStore";
+import { bluePrintData } from "../../constants/propertyBlueprintConstants";
+import { useStore } from "../../store/useStore";
+
+const propertyDetailsMap = new Map(propertyDetails.map((p) => [p.id, p]));
 
 const PropertyBlueprint = () => {
-  const [debugMode, setDebugMode] = useState(false);
   const {
     setHoveredProperty,
     setSelectedProperty,
@@ -16,14 +17,8 @@ const PropertyBlueprint = () => {
 
   return (
     <group>
-      {/* Debug Toggle */}
-      <mesh position={[0, 0, 5]} onClick={() => setDebugMode(!debugMode)}>
-        <boxGeometry args={[0.5, 0.2, 0.5]} />
-        <meshStandardMaterial color="gray" />
-      </mesh>
-
       {bluePrintData.map((unit) => {
-        const details = propertyDetails.find((p) => p.id === unit.id);
+        const details = propertyDetailsMap.get(unit.id);
         if (!details) return null;
 
         const isHovered = hoveredProperty === unit.id;
@@ -31,10 +26,7 @@ const PropertyBlueprint = () => {
 
         const statusColor = details.isAvailable ? "#4ade80" : "#ef4444";
 
-        // Adjust opacity logic slightly:
-        // If hovered/selected -> higher opacity
-        // Debug mode -> low opacity
-        const opacity = isHovered || isSelected ? 0.4 : debugMode ? 0.2 : 0;
+        const opacity = isHovered || isSelected ? 0.4 : 0;
 
         return (
           <mesh

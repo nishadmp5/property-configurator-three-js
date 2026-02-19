@@ -1,16 +1,17 @@
 import React from "react";
 import { propertyDetails } from "../../data/properties";
-import { useStore } from "../../strore/useStore";
+import { useStore } from "../../store/useStore";
+
+const propertyDetailsMap = new Map(propertyDetails.map((p) => [p.id, p]));
 
 const Tooltip = () => {
-  const { hoveredProperty, cursorPos,viewMode } = useStore();
+  const { hoveredProperty, cursorPos, viewMode } = useStore();
 
-  if(viewMode !== 'exterior') return null;
+  if (viewMode !== 'exterior') return null;
 
-  // If nothing is hovered, don't render anything
   if (!hoveredProperty) return null;
 
-  const details = propertyDetails.find((p) => p.id === hoveredProperty);
+  const details = propertyDetailsMap.get(hoveredProperty);
   if (!details) return null;
 
   return (
@@ -24,7 +25,7 @@ const Tooltip = () => {
       }}
     >
       <h3 className="font-bold text-gray-800 text-sm">
-        {details.type} - {details.name || details.id}
+        {details.type} - {details.id}
       </h3>
 
       <p className="text-gray-600 text-xs font-semibold mt-1">

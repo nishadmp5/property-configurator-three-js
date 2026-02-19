@@ -1,6 +1,6 @@
 import React from 'react'
-import { Layout } from './components/layout'
-import { preloadAssets } from './components/Scene/Preloader'
+import { Layout } from './components/Layout'
+import { preloadAssets } from './utils/preloader'
 
 preloadAssets()
 
